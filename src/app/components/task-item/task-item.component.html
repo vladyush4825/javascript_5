@@ -1,0 +1,15 @@
+<div class="task-item">
+    <p>{{ task.title }}</p>
+    <p>Виконавець: {{ task.assignee }}</p>
+    <p>Дата виконання: {{ task.dueDate }}</p>
+    <p>Статус: {{ task.status | taskStatus }}</p>
+    @if (task.status === TaskStatus.TODO) {
+      <span class="status todo">До роботи</span>
+    } @else if (task.status === TaskStatus.IN_PROGRESS) {
+      <span class="status in-progress">В процесі</span>
+    } @else if (task.status === TaskStatus.DONE) {
+      <span class="status done">Виконано</span>
+    }
+    <button (click)="deleteTask()">Видалити</button>
+    <button (click)="changeStatus()">Змінити статус</button>
+  </div>

@@ -1,0 +1,50 @@
+<h1>Список завдань</h1>
+
+<app-task-form 
+  [taskToEdit]="selectedTask" 
+  (taskAdded)="addTask($event)" 
+  (taskUpdated)="updateTask($event)">
+</app-task-form>
+
+<!-- Фільтр за статусом -->
+<div class="filter-section">
+  <label for="statusFilter">Фільтр за статусом:</label>
+  <select id="statusFilter" (change)="filterTasks($event)">
+    <option value="">Всі</option>
+    <option value="до роботи">До роботи</option>
+    <option value="в процесі">В процесі</option>
+    <option value="виконано">Виконано</option>
+  </select>
+</div>
+
+<!-- Список завдань -->
+@for (task of filteredTasks; track task.id) {
+  <div class="task-item-container">
+    <p class="task-title"><strong>{{ task.title }}</strong></p>
+    <p class="task-info"><span>Дата створення:</span> {{ task.dueDate | date:'dd.MM.yyyy' }}</p>
+    <p class="task-info"><span>Виконавець:</span> {{ task.assignee }}</p>
+    <p class="task-info"><span>Опис:</span> {{ task.description }}</p>
+    <p class="task-info">
+      <span>Статус:</span>
+      <span [ngClass]="{
+        'status-todo': task.status === TaskStatus.TODO,
+        'status-in-progress': task.status === TaskStatus.IN_PROGRESS,
+        'status-done': task.status === TaskStatus.DONE
+      }">{{ task.status | taskStatus }}</span>
+    </p>
+    <div class="status-section">
+      <select (change)="changeStatus(task, $event)">
+        <option value="до роботи" [selected]="task.status === TaskStatus.TODO">🚀 До роботи</option>
+        <option value="в процесі" [selected]="task.status === TaskStatus.IN_PROGRESS">⌛ В процесі</option>
+        <option value="виконано" [selected]="task.status === TaskStatus.DONE">✅ Виконано</option>
+      </select>
+    </div>
+    <div class="buttons">
+      @if (task.status === TaskStatus.TODO) {
+        <button class="action-button take-button" (click)="takeTask(task)">Взяти</button>
+      }
+      <button class="action-button delete-button" (click)="deleteTask(task.id)">Видалити</button>
+      <button class="action-button edit-button" (click)="editTask(task)">Редагувати</button>
+    </div>
+  </div>
+}

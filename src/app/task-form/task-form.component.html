@@ -1,0 +1,76 @@
+<form [formGroup]="taskForm" class="task-form" (ngSubmit)="saveTask()">
+    <div class="task-form-control">
+      <label for="title">Назва</label>
+      <input
+        type="text"
+        id="title"
+        formControlName="title"
+      />
+      @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+        <div class="error">Назва є обов'язковою</div>
+      }
+    </div>
+  
+    <div class="task-form-control">
+      <label for="description">Опис</label>
+      <input
+        type="text"
+        id="description"
+        formControlName="description"
+      />
+      @if (taskForm.get('description')?.hasError('forbiddenWords') && taskForm.get('description')?.touched) {
+        <div class="warning">Вводити слова React та vue заборонено</div>
+      }
+    </div>
+  
+    <div class="task-form-control">
+      <label for="dueDate">Дата дедлайну</label>
+      <input
+        type="date"
+        id="dueDate"
+        formControlName="dueDate"
+      />
+      @if (taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched) {
+        <div class="error">Дата є обов'язковою</div>
+      }
+      @if (taskForm.get('dueDate')?.hasError('minYear') && taskForm.get('dueDate')?.touched) {
+        <div class="warning">Рік не може бути меншим за поточний</div>
+      }
+    </div>
+  
+    <div class="task-form-control">
+      <label for="assignee">Виконавець</label>
+      <input
+        type="text"
+        id="assignee"
+        formControlName="assignee"
+      />
+      @if (taskForm.get('assignee')?.invalid && taskForm.get('assignee')?.touched) {
+        <div class="error">Виконавець є обов'язковим</div>
+      }
+    </div>
+  
+    <div class="task-form-control">
+      <label for="status">Статус</label>
+      <select
+        id="status"
+        formControlName="status"
+      >
+        <option [ngValue]="TaskStatus.TODO">До роботи</option>
+        <option [ngValue]="TaskStatus.IN_PROGRESS">В процесі</option>
+        <option [ngValue]="TaskStatus.DONE">Виконано</option>
+      </select>
+      @if (taskForm.get('status')?.invalid && taskForm.get('status')?.touched) {
+        <div class="error">Статус є обов'язковим</div>
+      }
+    </div>
+  
+    <div class="form-actions">
+      @if (isEditMode) {
+        <button type="submit" [disabled]="taskForm.invalid">Оновити завдання</button>
+        <button type="button" (click)="cancelEdit()" class="cancel-button">Скасувати</button>
+      } @else {
+        <button type="submit" [disabled]="taskForm.invalid">Додати нове завдання</button>
+      }
+    </div>
+  </form>

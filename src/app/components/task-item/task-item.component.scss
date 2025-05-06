@@ -1,0 +1,41 @@
+.task-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  button:hover {
+    background-color: #cc0000;
+  }
+  
+  .status {
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  
+  .status.todo {
+    background-color: #ffeb3b;
+    color: #333;
+  }
+  
+  .status.in-progress {
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  .status.done {
+    background-color: #4caf50;
+    color: white;
+  }
