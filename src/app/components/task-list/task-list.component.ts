@@ -22,7 +22,7 @@ export class TaskListComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.loadTasks(); // Завантажуємо задачі при ініціалізації
+    this.loadTasks(); 
   }
 
   loadTasks(): void {
@@ -42,13 +42,13 @@ export class TaskListComponent implements OnInit {
 
   deleteTask(taskId: number): void {
     this.taskService.deleteTask(taskId);
-    this.loadTasks(); // Оновлюємо списки після видалення
+    this.loadTasks(); 
   }
 
   takeTask(task: Task): void {
     task.status = TaskStatus.IN_PROGRESS;
     this.taskService.updateTask(task);
-    this.loadTasks(); // Оновлюємо списки
+    this.loadTasks(); 
   }
 
   changeStatus(task: Task, event: Event): void {
@@ -56,21 +56,21 @@ export class TaskListComponent implements OnInit {
     const newStatus = selectElement.value as TaskStatus;
     task.status = newStatus;
     this.taskService.updateTask(task);
-    this.loadTasks(); // Оновлюємо списки
+    this.loadTasks(); 
   }
 
   addTask(task: Task): void {
     this.taskService.addTask(task);
-    this.loadTasks(); // Оновлюємо списки
+    this.loadTasks(); 
   }
 
   editTask(task: Task): void {
-    this.selectedTask = { ...task }; // Створюємо копію для редагування
+    this.selectedTask = { ...task }; 
   }
 
   updateTask(updatedTask: Task): void {
     this.taskService.updateTask(updatedTask);
     this.selectedTask = null;
-    this.loadTasks(); // Оновлюємо списки
+    this.loadTasks(); 
   }
 }

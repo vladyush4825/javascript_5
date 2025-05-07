@@ -12,7 +12,7 @@ export class TaskService {
 
   addTask(newTask: Task): void {
     const maxId = this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) : 0;
-    newTask.id = maxId + 1; // Присвоюємо новий ID
+    newTask.id = maxId + 1; 
     this.tasks.push(newTask);
   }
 
@@ -27,6 +27,6 @@ export class TaskService {
   }
 
   getTasks(): Task[] {
-    return [...this.tasks]; // Повертаємо копію масиву для безпеки
+    return [...this.tasks]; 
   }
 }
