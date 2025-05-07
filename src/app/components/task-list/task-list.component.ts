@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../core/models/task.model';
-import { TASKS } from '../../core/moc_data/tasks.data';
 import { TaskStatus } from '../../core/models/status.enum';
 import { TaskStatusPipe } from '../../pipes/task-status.pipe';
 import { TaskFormComponent } from '../../task-form/task-form.component';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -13,16 +13,26 @@ import { TaskFormComponent } from '../../task-form/task-form.component';
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
-export class TaskListComponent {
-  tasks: Task[] = TASKS;
-  filteredTasks: Task[] = [...TASKS];
+export class TaskListComponent implements OnInit {
+  tasks: Task[] = [];
+  filteredTasks: Task[] = [];
   TaskStatus = TaskStatus;
-  // змінна для зберігання завдання, яке редагується
   selectedTask: Task | null = null;
+
+  constructor(private taskService: TaskService) {}
+
+  ngOnInit(): void {
+    this.loadTasks(); // Завантажуємо задачі при ініціалізації
+  }
+
+  loadTasks(): void {
+    this.tasks = this.taskService.getTasks();
+    this.filteredTasks = [...this.tasks];
+  }
 
   filterTasks(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
-    const status = selectElement.value;
+    const status = selectElement.value as TaskStatus;
     if (status) {
       this.filteredTasks = this.tasks.filter(task => task.status === status);
     } else {
@@ -31,39 +41,36 @@ export class TaskListComponent {
   }
 
   deleteTask(taskId: number): void {
-    this.tasks = this.tasks.filter(task => task.id !== taskId);
-    this.filteredTasks = [...this.tasks];
+    this.taskService.deleteTask(taskId);
+    this.loadTasks(); // Оновлюємо списки після видалення
   }
 
   takeTask(task: Task): void {
     task.status = TaskStatus.IN_PROGRESS;
-    this.filteredTasks = [...this.tasks];
+    this.taskService.updateTask(task);
+    this.loadTasks(); // Оновлюємо списки
   }
 
   changeStatus(task: Task, event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const newStatus = selectElement.value as TaskStatus;
     task.status = newStatus;
-    this.filteredTasks = [...this.tasks];
+    this.taskService.updateTask(task);
+    this.loadTasks(); // Оновлюємо списки
   }
 
   addTask(task: Task): void {
-    this.tasks.push(task); // обробка події taskAdded і додавання нового завдання
-    this.filteredTasks = [...this.tasks];
+    this.taskService.addTask(task);
+    this.loadTasks(); // Оновлюємо списки
   }
 
-  // метод для ініціалізації редагування завдання
   editTask(task: Task): void {
-    this.selectedTask = task;
+    this.selectedTask = { ...task }; // Створюємо копію для редагування
   }
 
-  // метод для обробки оновлення завдання
   updateTask(updatedTask: Task): void {
-    const index = this.tasks.findIndex(task => task.id === updatedTask.id);
-    if (index !== -1) {
-      this.tasks[index] = updatedTask;
-      this.filteredTasks = [...this.tasks];
-    }
+    this.taskService.updateTask(updatedTask);
     this.selectedTask = null;
+    this.loadTasks(); // Оновлюємо списки
   }
 }
